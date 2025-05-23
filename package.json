@@ -29,6 +29,8 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
+    "@types/cors": "^2.8.18",
+    "cors": "^2.8.5",
     "drizzle-orm": "^0.43.1",
     "pg": "^8.16.0"
   }

@@ -1,9 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
+import db from '../db';
 
-export const sendOtp = (req: Request, res: Response, next: NextFunction) => {
+export const sendOtp = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log("Hello from send-otp");
-    res.status(200).json({ message: "OTP sent" });
+    const otps = await db.query.otps.findMany()
+
+    res.status(200).json({ message: "OTP sent", otps: otps });
   } catch (err) {
     next(err);
   }
