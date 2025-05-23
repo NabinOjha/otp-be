@@ -20,6 +20,7 @@ export default defineConfig([
       'no-console': 'warn', // Ensure consistency for TypeScript files
       semi: ['warn', 'never'], // Warn on missing semicolons
       quotes: ['warn', 'single'], // Warn on double quotes, enforce single quotes
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
     },
   },
   // Ignore patterns

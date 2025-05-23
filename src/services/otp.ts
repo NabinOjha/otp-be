@@ -13,7 +13,9 @@ export class Otp {
   }
 
   private generateCode(length = 6): string {
-    return Array.from({ length }, () => Math.floor(Math.random() * 10)).join('');
+    return Array.from({ length }, () => Math.floor(Math.random() * 10)).join(
+      ''
+    );
   }
 
   send(phone: string): string {
@@ -21,9 +23,6 @@ export class Otp {
     const expiresAt = Date.now() + this.ttl;
 
     this.store.set(phone, { code, expiresAt });
-
-    // Simulate sending (you'd call a service here)
-    console.log(`Sending OTP ${code} to ${phone}`);
 
     return code;
   }
