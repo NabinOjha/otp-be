@@ -2,7 +2,6 @@ version: '3.9'
 
 services:
   app:
-    container_name: node-ts-app
     build: .
     ports:
       - "3000:3000"
@@ -14,7 +13,6 @@ services:
     command: npm run dev
 
   postgres:
-    container_name: postgres
     image: postgres:15-alpine
     restart: always
     ports:

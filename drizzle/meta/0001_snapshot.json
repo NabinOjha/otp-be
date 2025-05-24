@@ -1,6 +1,6 @@
 {
-  "id": "f834cf3c-323b-40a7-8507-2629b67b57e3",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "402653b5-bdeb-45c4-963d-139a091aef5c",
+  "prevId": "f834cf3c-323b-40a7-8507-2629b67b57e3",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -16,13 +16,13 @@
         },
         "phone": {
           "name": "phone",
-          "type": "varchar(20)",
+          "type": "varchar(10)",
           "primaryKey": false,
           "notNull": true
         },
         "code": {
           "name": "code",
-          "type": "varchar(10)",
+          "type": "varchar(6)",
           "primaryKey": false,
           "notNull": true
         },
