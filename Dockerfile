@@ -1,4 +1,4 @@
-FROM node:24-alpine 
+FROM node:24-alpine
 
 WORKDIR /app
 
@@ -7,8 +7,11 @@ RUN npm install
 
 COPY . .
 
-RUN npm run build
+RUN if [ "$NODE_ENV" = "production" ]; then npm run build; else echo "Skipping build in $NODE_ENV mode"; fi
+
+COPY entrypoint.sh .
+RUN chmod +x entrypoint.sh
 
 EXPOSE 3000
 
-CMD ["node", "dist/index.js"]
+ENTRYPOINT ["./entrypoint.sh"]
