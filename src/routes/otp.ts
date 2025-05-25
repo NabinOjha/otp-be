@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { sendOtp, resendOtp } from '../controllers/otp';
+import { sendOtp, veifyOtp } from '../controllers/otp';
 
 const router = Router();
 
 router.post('/send', sendOtp);
-router.put('/resend', resendOtp);
+router.put('/verify', veifyOtp);
 
 export default router;
