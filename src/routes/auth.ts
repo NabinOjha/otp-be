@@ -1,11 +1,12 @@
 import { Router } from 'express';
-import { auth } from './../middlewares/auth';
-import { sendOtp, veifyOtp, me } from './../controllers/auth';
+import { sendOtp, veifyOtp } from './../controllers/auth';
 
 const router = Router();
 
 router.post('/send-otp', sendOtp);
 router.put('/verify-otp', veifyOtp);
-router.get('/me', auth, me);
+
+router.post('/current-user', sendOtp);
+router.put('/sign-out', veifyOtp);
 
 export default router;

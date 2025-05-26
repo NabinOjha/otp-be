@@ -1,12 +1,12 @@
+import { PrismaClient } from './../generated/prisma';
 import axios from 'axios';
-import { eq } from 'drizzle-orm';
-import { otps } from './../db/schema';
-import db from '../db';
 import { IOtpConfig, IOtpRecord } from './types';
+
+const prisma = new PrismaClient();
 
 export class OtpService {
   private static readonly DEFAULT_LENGTH = 6;
-  private static readonly DEFAULT_EXPIRY_MINUTES = 5;
+  private static readonly DEFAULT_EXPIRY_MINUTES = 60;
 
   constructor(
     private readonly phoneNumber: string,
@@ -28,10 +28,6 @@ export class OtpService {
     await this.sendSmsNotification(code);
 
     return code;
-  }
-
-  public async resend(): Promise<string> {
-    return await this.send();
   }
 
   public async verify(
@@ -56,17 +52,15 @@ export class OtpService {
     await this.markAsVerified(otpRecord.id);
     return {
       isValid: true,
-      otpRecord: otpRecord,
+      otpRecord,
       message: 'OTP verified successfully',
     };
   }
 
   private generateCode(): string {
     const length = this.config.length || OtpService.DEFAULT_LENGTH;
-
     const randomArray = new Uint8Array(length);
     crypto.getRandomValues(randomArray);
-
     return Array.from(randomArray, byte => (byte % 10).toString()).join('');
   }
 
@@ -80,10 +74,10 @@ export class OtpService {
 
   private async findOtpByPhone(): Promise<IOtpRecord | null> {
     try {
-      const result = await db.query.otps.findFirst({
-        where: eq(otps.phone, this.phoneNumber),
+      const result = await prisma.user.findFirst({
+        where: { phone: this.phoneNumber },
       });
-      return result || null;
+      return result;
     } catch (error) {
       throw new Error(
         error instanceof Error ? error.message : 'Failed to retrieve OTP record'
@@ -93,12 +87,14 @@ export class OtpService {
 
   private async createOtpRecord(code: string, expiresAt: Date): Promise<void> {
     try {
-      await db.insert(otps).values({
-        phone: this.phoneNumber,
-        code: code,
-        expiresAt: expiresAt,
-        createdAt: new Date(),
-        verified: false,
+      await prisma.user.create({
+        data: {
+          phone: this.phoneNumber,
+          code,
+          expiresAt,
+          createdAt: new Date(),
+          verified: false,
+        },
       });
     } catch (error) {
       throw new Error(
@@ -113,14 +109,14 @@ export class OtpService {
     expiresAt: Date
   ): Promise<void> {
     try {
-      await db
-        .update(otps)
-        .set({
-          code: code,
-          expiresAt: expiresAt,
+      await prisma.user.update({
+        where: { id },
+        data: {
+          code,
+          expiresAt,
           verified: false,
-        })
-        .where(eq(otps.id, id));
+        },
+      });
     } catch (error) {
       throw new Error(
         error instanceof Error ? error.message : 'Failed to update OTP record'
@@ -130,18 +126,23 @@ export class OtpService {
 
   private async markAsVerified(id: number): Promise<void> {
     try {
-      await db.update(otps).set({ verified: true }).where(eq(otps.id, id));
+      await prisma.user.update({
+        where: { id },
+        data: { verified: true },
+      });
     } catch (error) {
-      // eslint-disable-next-line no-console
+      //eslint-disable-next-line no-console
       console.error('Database error marking OTP as verified:', error);
     }
   }
 
   private async deleteOtpRecord(id: number): Promise<void> {
     try {
-      await db.delete(otps).where(eq(otps.id, id));
+      await prisma.user.delete({
+        where: { id },
+      });
     } catch (error) {
-      // eslint-disable-next-line no-console
+      //eslint-disable-next-line no-console
       console.error('Database error deleting OTP:', error);
     }
   }
@@ -151,7 +152,9 @@ export class OtpService {
       const response = await axios.post(process.env.SMS_SERVICE_URL!, {
         auth_token: process.env.SMS_SERVICE_TOKEN,
         to: this.phoneNumber,
-        text: `Your OTP code is: ${code}. Valid for ${this.config.expiryMinutes || OtpService.DEFAULT_EXPIRY_MINUTES} minutes.`,
+        text: `Your OTP code is: ${code}. Valid for ${
+          this.config.expiryMinutes || OtpService.DEFAULT_EXPIRY_MINUTES
+        } minutes.`,
       });
 
       if (response.data.error) {
