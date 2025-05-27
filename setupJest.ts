@@ -6,6 +6,8 @@ import { Client } from 'pg';
 const prisma = new PrismaClient();
 const databaseUrl = process.env.DATABASE_URL;
 
+console.log('DATABASE_URL at runtime:', process.env.DATABASE_URL);
+
 async function setupTestDatabase() {
   if (!databaseUrl) {
     throw new Error('DATABASE_URL is not set in .env.test');
