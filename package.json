@@ -7,7 +7,7 @@
     "prisma:generate": "npx prisma generate",
     "prisma:migrate": "npx prisma migrate deploy",
     "prisma:migrate:dev": "npx prisma migrate dev",
-    "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/server.ts",
+    "dev": "npm run prisma:generate && npm run prisma:migrate:dev && nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/server.ts",
     "start": "npm run prisma:generate && npm run prisma:migrate && node dist/server.js",
     "lint": "eslint 'src/**/*.ts'",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
