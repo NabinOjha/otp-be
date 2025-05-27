@@ -1,6 +1,7 @@
-// setupJest.ts
+/* eslint-disable */
+
 import { execSync } from 'child_process';
-import { PrismaClient } from './src/generated/prisma'
+import { PrismaClient } from '@prisma/client';
 import { Client } from 'pg';
 import * as dotenv from 'dotenv';
 
@@ -23,7 +24,7 @@ async function setupTestDatabase() {
 
   // Connect to PostgreSQL server using a default database for admin tasks
   // Using 'postgres' database (default in PostgreSQL) to create the test database
-  const adminDb = 'postgres'; // Change to 'dev_db' if you prefer a specific dev database
+  const adminDb = 'postgres';
   const client = new Client({
     connectionString: databaseUrl.replace(dbName, adminDb),
   });

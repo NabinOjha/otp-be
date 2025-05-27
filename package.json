@@ -10,7 +10,8 @@
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
     "format": "prettier --write .",
     "prepare": "husky",
-    "test": "jest"
+    "test": "jest",
+    "prisma:generate": "prisma generate"
   },
   "keywords": [],
   "author": "",
