@@ -9,7 +9,6 @@ services:
       - "3000:3000"
     depends_on:
       - postgres
-    command: "npm start"
 
   postgres:
     image: postgres:15-alpine

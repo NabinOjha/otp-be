@@ -12,7 +12,6 @@ services:
       - /app/node_modules
     depends_on:
       - postgres
-    command: "npm run dev"
 
   postgres:
     image: postgres:15-alpine
