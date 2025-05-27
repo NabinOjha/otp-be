@@ -4,14 +4,16 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/server.js",
-    "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/server.ts",
+    "prisma:generate": "npx prisma generate",
+    "prisma:migrate": "npx prisma migrate deploy",
+    "prisma:migrate:dev": "npx prisma migrate dev",
+    "dev": "npm run prisma:generate && npm run prisma:migrate:dev && nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/server.ts",
+    "start": "npm run prisma:generate && npm run prisma:migrate && node dist/server.js",
     "lint": "eslint 'src/**/*.ts'",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
     "format": "prettier --write .",
     "prepare": "husky",
-    "test": "jest",
-    "prisma:generate": "prisma generate"
+    "test": "jest"
   },
   "keywords": [],
   "author": "",

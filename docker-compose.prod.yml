@@ -9,7 +9,7 @@ services:
       - "3000:3000"
     depends_on:
       - postgres
-    command: sh -c "npx prisma migrate deploy && node dist/server.js"
+    command: "npm start"
 
   postgres:
     image: postgres:15-alpine
