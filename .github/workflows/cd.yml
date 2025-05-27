@@ -24,7 +24,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             set -e
-            cd /root/otp-backend
+            cd /root/otp-be
             git fetch origin main
             git reset --hard origin/main
             docker compose -f docker-compose.prod.yml down
