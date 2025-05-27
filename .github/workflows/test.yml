@@ -2,9 +2,11 @@ name: Test
 
 on:
   workflow_call:
+
 jobs:
   test:
     runs-on: ubuntu-latest
+
     services:
       postgres:
         image: postgres:15-alpine
@@ -19,6 +21,10 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+
+    env:
+      DATABASE_URL: postgres://postgres:mypassword@postgres:5432/test
+
     steps:
       - uses: actions/checkout@v3
       - run: npm install
@@ -26,4 +32,5 @@ jobs:
       - run: npm run lint
       - run: npx prisma generate
       - run: npx prisma migrate deploy
+
       - run: npm run test
