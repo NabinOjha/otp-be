@@ -1,12 +1,15 @@
 /* eslint-disable */
+
 import { execSync } from 'child_process';
 import { PrismaClient } from '@prisma/client';
 import { Client } from 'pg';
+import * as dotenv from 'dotenv';
+
+// Load test-specific environment variables
+dotenv.config({ path: '.env.test' });
 
 const prisma = new PrismaClient();
 const databaseUrl = process.env.DATABASE_URL;
-
-console.log('DATABASE_URL at runtime:', process.env.DATABASE_URL);
 
 async function setupTestDatabase() {
   if (!databaseUrl) {
