@@ -6,7 +6,7 @@ import { errorHandler } from './middlewares/errorHandler';
 import authRoutes from './routes/auth';
 
 const app = express();
-app.use(cors({ credentials: true, origin: 'http://localhost:5173' }));
+app.use(cors({ credentials: true, origin: process.env.APP_URL }));
 
 app.use(cookieParser());
 
