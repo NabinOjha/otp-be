@@ -1,26 +1,31 @@
 name: Deploy
+
 on:
   push:
     branches: [main]
+
 env:
   NODE_ENV: production
+
 jobs:
   test:
     uses: ./.github/workflows/test.yml
+
   deploy:
     needs: test
     runs-on: ubuntu-latest
+
     steps:
-      - name: Deploy
+      - name: Deploy to VPS via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            set -e
             cd /root/otp-backend
-            git pull origin main --rebase
-            npm install
-            npx prisma migrate deploy
-            NODE_ENV=production docker compose down
-            NODE_ENV=production docker compose up -d --build
+            git fetch origin main
+            git reset --hard origin/main
+            docker compose -f docker-compose.prod.yml down
+            docker compose -f docker-compose.prod.yml up -d --build
