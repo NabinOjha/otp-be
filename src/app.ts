@@ -26,7 +26,7 @@ app.use(morgan('dev'));
 app.use('/auth', authRoutes);
 
 app.get('/debug-sentry', function mainHandler() {
-  throw new Error('Sentry Error');
+  throw new Error('Sentry Error.');
 });
 
 Sentry.setupExpressErrorHandler(app);
